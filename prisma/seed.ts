@@ -15,20 +15,20 @@ async function main() {
       passwordHash: "admin",
     },
   });
-  await prisma.game.create({
-    data: {
-      players: { connect: { id: user.id } },
-      status: "idle",
-      field: Array(9).fill(null),
-    },
-  });
-  await prisma.game.create({
-    data: {
-      players: { connect: { id: user2.id } },
-      status: "idle",
-      field: Array(9).fill(null),
-    },
-  });
+  // await prisma.game.create({
+  //   data: {
+  //     players: { connect: { id: user.id } },
+  //     status: "idle",
+  //     field: Array(9).fill(null),
+  //   },
+  // });
+  // await prisma.game.create({
+  //   data: {
+  //     players: { connect: { id: user2.id } },
+  //     status: "idle",
+  //     field: Array(9).fill(null),
+  //   },
+  // });
 }
 main()
   .then(async () => {

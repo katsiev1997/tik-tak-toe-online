@@ -1,30 +1,53 @@
-export type Left<E> = {
+export type Left<L> = {
   type: "left";
-  error: E;
+  error: L;
 };
 
-export type Right<V> = {
+export type Right<R> = {
   type: "right";
-  value: V;
+  value: R;
 };
 
-export type Either<E, V> = Left<E> | Right<V>;
+export type Either<L, R> = Left<L> | Right<R>;
 
-export const left = <E>(error: E): Left<E> => ({
+export const left = <L>(error: L): Left<L> => ({
   type: "left",
   error,
 });
-export const right = <V>(value: V): Right<V> => ({
+export const right = <R>(value: R): Right<R> => ({
   type: "right",
   value,
 });
 
-export const mapEither = <E, V, V2>(
-  either: Either<E, V>,
-  fn: (v: V) => V2,
-): Either<E, V2> => {
+export const mapRight = <R, R2, L = unknown>(
+  either: Either<L, R>,
+  fn: (v: R) => R2,
+): Either<L, R2> => {
   if (either.type === "right") {
-    return { type: "right", value: fn(either.value) };
+    return right(fn(either.value));
   }
   return either;
+};
+
+export const mapLeft = <R, L, L2>(
+  either: Either<L, R>,
+  fn: (v: L) => L2,
+): Either<L2, R> => {
+  if (either.type === "left") {
+    return left(fn(either.error));
+  }
+  return either;
+};
+
+export const matchEither = <L, R, V>(
+  either: Either<L, R>,
+  matchers: {
+    left: (error: L) => V;
+    right: (value: R) => V;
+  },
+): V => {
+  if (either.type === "left") {
+    return matchers.left(either.error);
+  }
+  return matchers.right(either.value);
 };
